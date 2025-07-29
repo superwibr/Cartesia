@@ -95,11 +95,14 @@ export default class GameObject {
     get root() {
         if (this.#cleanRoot) return this.#savedRoot;
 
-        const found = this.findParent(p => p.parent = null);
+        const found = this.findParent(p => p.parent === null);
 
-        if(found === null) return console.warn(`${this.name} tried to access root but has no parent`);
+        if (found === null) {
+            console.warn(`${this.constructor.name} tried to access root but has no parent`);
+            return null;
+        }
 
-        if(!(found instanceof Cartesia)) console.warn(`${this.name} cannot trace root to instance of Cartesia. This is probably not intended behaviour.`);
+        if (!(found instanceof Cartesia)) console.warn(`${this.name} cannot trace root to instance of Cartesia. This is probably not intended behaviour.`);
 
         this.#savedRoot = found;
         this.#cleanRoot = true;
