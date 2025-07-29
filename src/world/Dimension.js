@@ -1,4 +1,3 @@
-import { GCOPTIONS, WORLDOPTIONS } from "../options.js";
 import GameObject from "../GameObject.js";
 import Entity from "../entities/Entity.js";
 
@@ -7,6 +6,13 @@ export default class Dimension extends GameObject {
     tiles = {};
     events = [];
     time = 0;
+
+    worldToTile(x) {
+        return Math.floor((x + this.engine?.options.world.tileScale / 2) / this.engine?.options.world.tileScale);
+    }
+    worldToTile2d(x, y) {
+        return [worldToTile(x), worldToTile(y)];
+    }
 
     /**
      * Adds an entity to the dimension
@@ -50,7 +56,7 @@ export default class Dimension extends GameObject {
 
             case "gc": {
                 this.garbageCollect();
-                this.events.push(["gc", this.time + GCOPTIONS.interval]);
+                this.events.push(["gc", this.time + this.engine?.options.world.interval]);
 
                 break;
             }
@@ -128,7 +134,7 @@ export default class Dimension extends GameObject {
      * @param {Number} dt The time delta to update by
      */
     update(dt) {
-        const newTime = this.time + dt * WORLDOPTIONS.timeRate;
+        const newTime = this.time + dt * this.engine?.options.world.timeRate;
         const currEv = [];
 
         this.events.forEach((ev, i) => {

@@ -1,6 +1,4 @@
-import { WORLDOPTIONS } from "../options.js";
 import Entity from "./Entity.js";
-import { worldToTile2d } from "../utils.js";
 
 export default class TileEntity extends Entity {
     type = "tile";
@@ -12,7 +10,7 @@ export default class TileEntity extends Entity {
         this.dim.events.push([
             "mark",
             this.dim.time,
-            worldToTile2d(this.x, this.y).join(","),
+            this.dim.worldToTile2d(this.x, this.y).join(","),
             this
         ]);
     }
@@ -23,7 +21,7 @@ export default class TileEntity extends Entity {
         this.dim.events.push([
             "mark",
             this.dim.time,
-            worldToTile2d(this.x, this.y).join(","),
+            this.dim.worldToTile2d(this.x, this.y).join(","),
             null
         ]);
     }
@@ -47,9 +45,9 @@ export default class TileEntity extends Entity {
         const startY = this.y;
 
         // Check if destination is an adjacent tile
-        const isAdjX = Math.abs(deltaX) === WORLDOPTIONS.tileScale && deltaY === 0;
-        const isAdjY = Math.abs(deltaY) === WORLDOPTIONS.tileScale && deltaX === 0;
-        const isDiag = Math.abs(deltaX) === WORLDOPTIONS.tileScale && Math.abs(deltaY) === WORLDOPTIONS.tileScale;
+        const isAdjX = Math.abs(deltaX) === this.engine?.options.world.tileScale && deltaY === 0;
+        const isAdjY = Math.abs(deltaY) === this.engine?.options.world.tileScale && deltaX === 0;
+        const isDiag = Math.abs(deltaX) === this.engine?.options.world.tileScale && Math.abs(deltaY) === this.engine?.options.world.tileScale;
         if (!(isAdjX || isAdjY || isDiag)) {
             console.log("Invalid slide destination");
             return;

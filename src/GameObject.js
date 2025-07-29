@@ -1,3 +1,5 @@
+import Cartesia from "../Cartesia.js";
+
 export default class GameObject {
     /** @type {GameObject?} */
     parent = null;
@@ -34,13 +36,16 @@ export default class GameObject {
      * @param {GameObject} parent 
      */
     setparent(parent) {
-        if (this.parent instanceof GameObject) this.unparent();
-
         if (parent instanceof GameObject) {
+            if (this.parent instanceof GameObject) this.unparent();
+
             this.parent = parent;
             if (this.parent.children.indexOf(this) === -1) {
                 this.parent.child(this);
             }
+
+            // root should be updated
+            this.#cleanRoot = false;
         }
     }
 
@@ -54,6 +59,9 @@ export default class GameObject {
                 this.parent.unchild(this);
             }
             this.parent = null;
+
+            // root should be updated
+            this.#cleanRoot = false;
         }
     }
 
@@ -70,7 +78,33 @@ export default class GameObject {
     }
 
     findParent(predicate, depth = 0) {
-        
+        if (this.parent === null) return null;
+
+        return predicate(this.parent)
+            ? this.parent
+            : this.parent.findParent(
+                predicate,
+                depth === 0
+                    ? 0
+                    : depth - 1
+            );
+    }
+
+    #cleanRoot = true;
+    #savedRoot = this;
+    get root() {
+        if (this.#cleanRoot) return this.#savedRoot;
+
+        const found = this.findParent(p => p.parent = null);
+
+        if(found === null) return console.warn(`${this.name} tried to access root but has no parent`);
+
+        if(!(found instanceof Cartesia)) console.warn(`${this.name} cannot trace root to instance of Cartesia. This is probably not intended behaviour.`);
+
+        this.#savedRoot = found;
+        this.#cleanRoot = true;
+
+        return found;
     }
 
     static create(props = {}, ...args) {
