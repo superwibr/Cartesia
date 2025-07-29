@@ -8,10 +8,10 @@ export default class Dimension extends GameObject {
     time = 0;
 
     worldToTile(x) {
-        return Math.floor((x + this.engine?.options.world.tileScale / 2) / this.engine?.options.world.tileScale);
+        return Math.floor((x + this.engine?.opt.world.tileScale / 2) / this.engine?.opt.world.tileScale);
     }
     worldToTile2d(x, y) {
-        return [worldToTile(x), worldToTile(y)];
+        return [this.worldToTile(x), this.worldToTile(y)];
     }
 
     /**
@@ -56,7 +56,7 @@ export default class Dimension extends GameObject {
 
             case "gc": {
                 this.garbageCollect();
-                this.events.push(["gc", this.time + this.engine?.options.world.interval]);
+                this.events.push(["gc", this.time + this.engine?.opt.world.interval]);
 
                 break;
             }
@@ -134,7 +134,7 @@ export default class Dimension extends GameObject {
      * @param {Number} dt The time delta to update by
      */
     update(dt) {
-        const newTime = this.time + dt * this.engine?.options.world.timeRate;
+        const newTime = this.time + dt * this.engine?.opt.world.timeRate;
         const currEv = [];
 
         this.events.forEach((ev, i) => {

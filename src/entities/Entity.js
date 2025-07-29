@@ -6,7 +6,7 @@ export default class Entity extends GameObject {
     type = "entity";
 
     /** Diameter of the entity */
-    size = this.engine?.options.world.tileScale;
+    size = this.engine?.opt.world.tileScale;
 
     /** The entity's X position */
     x = 0;
@@ -35,9 +35,9 @@ export default class Entity extends GameObject {
     ol = this.life;
 
     /** Predicted X position when life = 0 at current velocity, used in interpolation */
-    lx = this.x + this.vx * this.engine?.options.world.velocityScale * this.life;
+    lx = this.x + this.vx * this.engine?.opt.world.velocityScale * this.life;
     /** Predicted Y position when life = 0 at current velocity, used in interpolation */
-    ly = this.y + this.vy * this.engine?.options.world.velocityScale * this.life;
+    ly = this.y + this.vy * this.engine?.opt.world.velocityScale * this.life;
 
     /** Stats manager for this entity */
     statsManager = new StatsManager();
@@ -70,8 +70,8 @@ export default class Entity extends GameObject {
 
         this.ol = this.life;
 
-        this.lx = this.x + this.vx * this.life * this.engine?.options.world.velocityScale;
-        this.ly = this.y + this.vy * this.life * this.engine?.options.world.velocityScale;
+        this.lx = this.x + this.vx * this.life * this.engine?.opt.world.velocityScale;
+        this.ly = this.y + this.vy * this.life * this.engine?.opt.world.velocityScale;
     }
 
     step(dt = 0) {
@@ -101,8 +101,8 @@ export default class Entity extends GameObject {
                 this.x = lerp(this.ox, this.lx, (this.ol - this.life) / this.ol);
                 this.y = lerp(this.oy, this.ly, (this.ol - this.life) / this.ol);
             } else {
-                this.x += this.vx * dt * this.engine?.options.world.velocityScale;
-                this.y += this.vy * dt * this.engine?.options.world.velocityScale;
+                this.x += this.vx * dt * this.engine?.opt.world.velocityScale;
+                this.y += this.vy * dt * this.engine?.opt.world.velocityScale;
             }
         };
     }
