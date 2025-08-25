@@ -70,7 +70,7 @@ export default class Attribute extends GameObject {
     }
 
     clone(){
-        return this.create({
+        return this.constructor.create({
             operation: this.operation,
             value: this.value,
             base: this.base

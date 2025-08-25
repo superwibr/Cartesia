@@ -8,7 +8,7 @@ export default class StatModifier extends Stat {
 	update(dt) {
 		super.update(dt);
 
-		duration -= dt;
-		if(duration < 0) duration = 0;
+		this.duration -= dt;
+		if(this.duration < 0) this.duration = 0;
 	}
 }
