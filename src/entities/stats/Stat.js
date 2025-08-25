@@ -27,7 +27,7 @@ export default class Stat extends GameObject {
     value = new Attribute();
 
     clamp() {
-        return this.value.value = Math.max(this.min.value, Math.max(this.value.value, this.max.value));
+        return this.value.value = Math.max(this.min.value, Math.min(this.value.value, this.max.value));
     }
 
     /**
@@ -40,6 +40,10 @@ export default class Stat extends GameObject {
         this.value.applyTo(stat.value);
     }
 
+    toString(){
+        return `[ min ${this.min.value} / ${this.value.value} / max ${this.max.value} ]`;
+    }
+
     /** Resets this stat's attributes to their base values */
     reset() {
         this.min.reset();
@@ -48,7 +52,7 @@ export default class Stat extends GameObject {
     }
 
     clone(){
-        return new this(this.name, {
+        return new this.constructor(this.name, {
             min: this.min.clone(),
             max: this.max.clone(),
             value: this.value.clone()
