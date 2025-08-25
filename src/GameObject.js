@@ -73,8 +73,24 @@ export default class GameObject {
         this.children.forEach(child => child.update(dt));
     }
 
-    find(predicate, depth = 0) {
+    allChildren(depth = 0) {
+        const all = [];
+        const mem = [this];
 
+        while ((depth === 0 || depth--) && mem.length) {
+            const curr =  [...mem];
+            mem.length = 0;
+
+            for(const gobj of curr) mem.push(...gobj.children);
+
+            all.push(...mem);
+        }
+
+        return all;
+    }
+
+    find(predicate, depth = 0) {
+        return this.allChildren(depth).find(predicate);
     }
 
     findParent(predicate, depth = 0) {
