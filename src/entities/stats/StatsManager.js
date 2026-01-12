@@ -19,6 +19,9 @@ export default class StatsManager extends GameObject {
     /** @type {Object.<String, Stat>} */
     stats = {};
 
+    /** @type {Object.<String, Number>} */
+    simpleStats = {};
+
     /** Resolves all stat entries into a flat form in the stats object */
     compute() {
         Object.keys(this.rawStats).forEach(name => this.stats[name] = this.rawStats[name].clone());
@@ -31,7 +34,14 @@ export default class StatsManager extends GameObject {
             mod.applyTo(this.stats[mod.name]);
         });
 
-        Object.values(this.stats).forEach(stat => stat.clamp());
+        Object.values(this.stats).forEach(stat => {
+            console.log(stat.toString())
+            stat.clamp()
+            console.log(stat.toString())
+        });
+
+        for(const name in this.simpleStats) delete this.simpleStats[name];
+        for(const name in this.stats) this.simpleStats[name] = this.stats[name].value.value;
     }
     rawReserve(name) {
         this.rawStats[name] = new Stat(name);
@@ -55,6 +65,7 @@ export default class StatsManager extends GameObject {
      */
     add(...mods) {
         const id = this.entries.push(...mods) - 1;
+        this.computeFilters();
         this.compute();
         return id;
     }
@@ -70,6 +81,7 @@ export default class StatsManager extends GameObject {
         if (id === -1 || !this.entries[id]) return null;
 
         const rt = this.entries.splice(id, 1)[0];
+        this.computeFilters();
         this.compute();
         return rt;
     }
@@ -132,7 +144,7 @@ export default class StatsManager extends GameObject {
         this.entries.forEach(mod => mod.update(dt));
 
         this.entries.forEach((mod, i) => {
-            if(mod.duration <= 0) this.remove(i);
+            if (mod.duration <= 0) this.remove(i);
         });
     }
 }

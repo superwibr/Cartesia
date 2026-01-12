@@ -43,7 +43,7 @@ export default class Entity extends GameObject {
     statsManager = new StatsManager();
 
     /** Cached stats object for this entity */
-    stats = this.statsManager.stats;
+    stats = this.statsManager.simpleStats;
 
     /** @type {Set<String>} */
     tags = new Set();
